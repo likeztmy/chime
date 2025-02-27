@@ -1,9 +1,17 @@
 import { GalleryVerticalEnd } from "lucide-react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { LoginCard } from "@/feature/auth/components/login-card";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: LoginPage,
+  beforeLoad: () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      throw redirect({
+        to: "/welcome",
+      });
+    }
+  },
 });
 
 function LoginPage() {

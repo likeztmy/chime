@@ -38,6 +38,7 @@ export const useLogin = () => {
       localStorage.setItem("refresh_token", refresh_token);
       localStorage.setItem("token_type", token_type);
       localStorage.setItem("expire_in", expire_in.toString());
+      localStorage.setItem("redirect_url", redirect_url);
       // 清除之前的查询缓存
       queryClient.clear();
       // 跳转到首页或其他页面

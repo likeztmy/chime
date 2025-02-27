@@ -32,7 +32,7 @@ class RequestService {
 
   constructor() {
     this.instance = axios.create({
-      baseURL: "http://47.120.14.30:8081/api/v1",
+      baseURL: "http://47.120.14.30:8080/api/v1",
       timeout: 15000,
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ class RequestService {
       (error: AxiosError) => {
         console.error("Request error:", error);
         return Promise.reject(error);
-      },
+      }
     );
 
     // 响应拦截器
@@ -66,6 +66,7 @@ class RequestService {
 
         if (data.code === 200) {
           return data.data;
+        } else if (data.code === 302) {
         } else {
           if (!requestConfig.skipErrorHandler) {
             toast.error(data.message || "请求失败");
@@ -81,7 +82,7 @@ class RequestService {
           toast.error(errorMessage);
         }
         return Promise.reject(error);
-      },
+      }
     );
   }
 
@@ -98,7 +99,7 @@ class RequestService {
   public async get<T = any>(
     url: string,
     params?: any,
-    config: Omit<RequestConfig, "params"> = {},
+    config: Omit<RequestConfig, "params"> = {}
   ): Promise<T> {
     return this.request<T>({ ...config, method: "get", url, params });
   }
@@ -107,7 +108,7 @@ class RequestService {
   public async post<T = any>(
     url: string,
     data?: any,
-    config: Omit<RequestConfig, "data"> = {},
+    config: Omit<RequestConfig, "data"> = {}
   ): Promise<T> {
     return this.request<T>({ ...config, method: "post", url, data });
   }
@@ -116,7 +117,7 @@ class RequestService {
   public async put<T = any>(
     url: string,
     data?: any,
-    config: Omit<RequestConfig, "data"> = {},
+    config: Omit<RequestConfig, "data"> = {}
   ): Promise<T> {
     return this.request<T>({ ...config, method: "put", url, data });
   }
@@ -125,7 +126,7 @@ class RequestService {
   public async delete<T = any>(
     url: string,
     params?: any,
-    config: Omit<RequestConfig, "params"> = {},
+    config: Omit<RequestConfig, "params"> = {}
   ): Promise<T> {
     return this.request<T>({ ...config, method: "delete", url, params });
   }
