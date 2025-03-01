@@ -1,0 +1,98 @@
+/* 编辑器基础样式 */
+.editor {
+  @apply text-base leading-relaxed;
+}
+
+/* 标题样式 */
+.editor h1 {
+  @apply text-3xl font-semibold tracking-tight mt-8 mb-4 text-foreground/90;
+}
+
+.editor h2 {
+  @apply text-2xl font-medium tracking-tight mt-8 mb-3 text-foreground/90;
+}
+
+.editor h3 {
+  @apply text-xl font-medium tracking-tight mt-6 mb-3 text-foreground/90;
+}
+
+/* 段落样式 */
+.editor p {
+  @apply text-foreground/80 mb-4;
+}
+
+/* 列表样式 */
+.editor ul,
+.editor ol {
+  @apply my-4 ml-6 text-foreground/80;
+}
+
+.editor li {
+  @apply mb-1;
+}
+
+/* 任务列表样式 */
+.editor ul[data-type="taskList"] {
+  @apply list-none ml-2;
+}
+
+.editor ul[data-type="taskList"] li {
+  @apply flex items-start gap-2 my-1;
+}
+
+.editor ul[data-type="taskList"] input[type="checkbox"] {
+  @apply mt-1.5 h-4 w-4 rounded border-border/60 text-primary bg-background/80 focus:ring-primary/30 transition-colors;
+}
+
+/* 引用样式 */
+.editor blockquote {
+  @apply pl-4 border-l-2 border-border italic text-foreground/70 my-4;
+}
+
+/* 代码块样式 */
+.editor pre {
+  @apply bg-muted/50 rounded-lg p-4 my-4 overflow-x-auto;
+}
+
+.editor code {
+  @apply text-sm font-mono bg-muted/30 px-1.5 py-0.5 rounded text-foreground/80;
+}
+
+/* 表格样式 */
+.editor table {
+  @apply w-full my-4 border-collapse;
+}
+
+.editor th {
+  @apply bg-muted/50 font-medium text-sm px-4 py-2 border border-border/40 text-foreground/80;
+}
+
+.editor td {
+  @apply px-4 py-2 border border-border/40 text-foreground/70;
+}
+
+/* 链接样式 */
+.editor a {
+  @apply text-primary/90 hover:text-primary transition-colors no-underline hover:underline;
+}
+
+/* 图片样式 */
+.editor img {
+  @apply rounded-lg shadow-sm max-w-full my-4 mx-auto;
+}
+
+/* 分割线样式 */
+.editor hr {
+  @apply my-8 border-t border-border/40;
+}
+
+/* 选中样式 */
+.editor .ProseMirror-selectednode {
+  @apply outline outline-2 outline-primary/20 outline-offset-2;
+}
+
+/* 编辑器占位符 */
+.editor .is-empty::before {
+  @apply text-muted-foreground/60 float-left h-0 pointer-events-none;
+  content: attr(data-placeholder);
+} 

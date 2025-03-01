@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './pages/__root'
+import { Route as IndexImport } from './pages/index'
 import { Route as standaloneLayoutImport } from './pages/(standalone)/_layout'
 import { Route as dashboardWelcomeImport } from './pages/(dashboard)/welcome'
 import { Route as dashboardLayoutImport } from './pages/(dashboard)/_layout'
@@ -22,6 +23,7 @@ import { Route as dashboardLayoutTasksIndexImport } from './pages/(dashboard)/_l
 import { Route as dashboardLayoutDocsIndexImport } from './pages/(dashboard)/_layout/docs/index'
 import { Route as dashboardLayoutChatIndexImport } from './pages/(dashboard)/_layout/chat/index'
 import { Route as standaloneLayoutUserProfileImport } from './pages/(standalone)/_layout.user/profile'
+import { Route as dashboardLayoutDocsIdImport } from './pages/(dashboard)/_layout/docs/$id'
 
 // Create Virtual Routes
 
@@ -37,6 +39,12 @@ const standaloneRoute = standaloneImport.update({
 
 const dashboardRoute = dashboardImport.update({
   id: '/(dashboard)',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -93,10 +101,23 @@ const standaloneLayoutUserProfileRoute =
     getParentRoute: () => standaloneLayoutRoute,
   } as any)
 
+const dashboardLayoutDocsIdRoute = dashboardLayoutDocsIdImport.update({
+  id: '/docs/$id',
+  path: '/docs/$id',
+  getParentRoute: () => dashboardLayoutRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/(auth)/login': {
       id: '/(auth)/login'
       path: '/login'
@@ -146,6 +167,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof standaloneLayoutProfileImport
       parentRoute: typeof standaloneLayoutImport
     }
+    '/(dashboard)/_layout/docs/$id': {
+      id: '/(dashboard)/_layout/docs/$id'
+      path: '/docs/$id'
+      fullPath: '/docs/$id'
+      preLoaderRoute: typeof dashboardLayoutDocsIdImport
+      parentRoute: typeof dashboardLayoutImport
+    }
     '/(standalone)/_layout/user/profile': {
       id: '/(standalone)/_layout/user/profile'
       path: '/user/profile'
@@ -180,12 +208,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface dashboardLayoutRouteChildren {
+  dashboardLayoutDocsIdRoute: typeof dashboardLayoutDocsIdRoute
   dashboardLayoutChatIndexRoute: typeof dashboardLayoutChatIndexRoute
   dashboardLayoutDocsIndexRoute: typeof dashboardLayoutDocsIndexRoute
   dashboardLayoutTasksIndexRoute: typeof dashboardLayoutTasksIndexRoute
 }
 
 const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
+  dashboardLayoutDocsIdRoute: dashboardLayoutDocsIdRoute,
   dashboardLayoutChatIndexRoute: dashboardLayoutChatIndexRoute,
   dashboardLayoutDocsIndexRoute: dashboardLayoutDocsIndexRoute,
   dashboardLayoutTasksIndexRoute: dashboardLayoutTasksIndexRoute,
@@ -235,10 +265,11 @@ const standaloneRouteWithChildren = standaloneRoute._addFileChildren(
 )
 
 export interface FileRoutesByFullPath {
-  '/login': typeof authLoginRoute
   '/': typeof standaloneLayoutRouteWithChildren
+  '/login': typeof authLoginRoute
   '/welcome': typeof dashboardWelcomeRoute
   '/profile': typeof standaloneLayoutProfileRoute
+  '/docs/$id': typeof dashboardLayoutDocsIdRoute
   '/user/profile': typeof standaloneLayoutUserProfileRoute
   '/chat': typeof dashboardLayoutChatIndexRoute
   '/docs': typeof dashboardLayoutDocsIndexRoute
@@ -246,10 +277,11 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '/login': typeof authLoginRoute
   '/': typeof standaloneLayoutRouteWithChildren
+  '/login': typeof authLoginRoute
   '/welcome': typeof dashboardWelcomeRoute
   '/profile': typeof standaloneLayoutProfileRoute
+  '/docs/$id': typeof dashboardLayoutDocsIdRoute
   '/user/profile': typeof standaloneLayoutUserProfileRoute
   '/chat': typeof dashboardLayoutChatIndexRoute
   '/docs': typeof dashboardLayoutDocsIndexRoute
@@ -258,6 +290,7 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/': typeof IndexRoute
   '/(auth)/login': typeof authLoginRoute
   '/(dashboard)': typeof dashboardRouteWithChildren
   '/(dashboard)/_layout': typeof dashboardLayoutRouteWithChildren
@@ -265,6 +298,7 @@ export interface FileRoutesById {
   '/(standalone)': typeof standaloneRouteWithChildren
   '/(standalone)/_layout': typeof standaloneLayoutRouteWithChildren
   '/(standalone)/_layout/profile': typeof standaloneLayoutProfileRoute
+  '/(dashboard)/_layout/docs/$id': typeof dashboardLayoutDocsIdRoute
   '/(standalone)/_layout/user/profile': typeof standaloneLayoutUserProfileRoute
   '/(dashboard)/_layout/chat/': typeof dashboardLayoutChatIndexRoute
   '/(dashboard)/_layout/docs/': typeof dashboardLayoutDocsIndexRoute
@@ -274,26 +308,29 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/login'
     | '/'
+    | '/login'
     | '/welcome'
     | '/profile'
+    | '/docs/$id'
     | '/user/profile'
     | '/chat'
     | '/docs'
     | '/tasks'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/login'
     | '/'
+    | '/login'
     | '/welcome'
     | '/profile'
+    | '/docs/$id'
     | '/user/profile'
     | '/chat'
     | '/docs'
     | '/tasks'
   id:
     | '__root__'
+    | '/'
     | '/(auth)/login'
     | '/(dashboard)'
     | '/(dashboard)/_layout'
@@ -301,6 +338,7 @@ export interface FileRouteTypes {
     | '/(standalone)'
     | '/(standalone)/_layout'
     | '/(standalone)/_layout/profile'
+    | '/(dashboard)/_layout/docs/$id'
     | '/(standalone)/_layout/user/profile'
     | '/(dashboard)/_layout/chat/'
     | '/(dashboard)/_layout/docs/'
@@ -309,12 +347,14 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   authLoginRoute: typeof authLoginRoute
   dashboardRoute: typeof dashboardRouteWithChildren
   standaloneRoute: typeof standaloneRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   authLoginRoute: authLoginRoute,
   dashboardRoute: dashboardRouteWithChildren,
   standaloneRoute: standaloneRouteWithChildren,
@@ -330,10 +370,14 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/",
         "/(auth)/login",
         "/(dashboard)",
         "/(standalone)"
       ]
+    },
+    "/": {
+      "filePath": "index.tsx"
     },
     "/(auth)/login": {
       "filePath": "(auth)/login.tsx"
@@ -349,6 +393,7 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/_layout.tsx",
       "parent": "/(dashboard)",
       "children": [
+        "/(dashboard)/_layout/docs/$id",
         "/(dashboard)/_layout/chat/",
         "/(dashboard)/_layout/docs/",
         "/(dashboard)/_layout/tasks/"
@@ -375,6 +420,10 @@ export const routeTree = rootRoute
     "/(standalone)/_layout/profile": {
       "filePath": "(standalone)/_layout/profile.tsx",
       "parent": "/(standalone)/_layout"
+    },
+    "/(dashboard)/_layout/docs/$id": {
+      "filePath": "(dashboard)/_layout/docs/$id.tsx",
+      "parent": "/(dashboard)/_layout"
     },
     "/(standalone)/_layout/user/profile": {
       "filePath": "(standalone)/_layout.user/profile.tsx",

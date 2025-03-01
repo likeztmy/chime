@@ -374,7 +374,7 @@ function RouteComponent() {
                       <span className="text-sm font-medium text-[#111827]">
                         {conversation?.nickname}
                       </span>
-                      <span className="text-xs text-[#6B7280] mt-1 line-clamp-1">
+                      <span className="text-xs text-[#6B7280] mt-1 line-clamp-1 truncate max-w-[100px]">
                         {conversation?.messages?.[0]?.content_type === "image"
                           ? "【图片】"
                           : conversation?.messages?.[0]?.content_body}
